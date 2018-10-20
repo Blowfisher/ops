@@ -1,0 +1,4 @@
+HostName: {{ host }}
+HostMetaData: centos
+ServerName: 192.168.5.5
+ActiveServieName: 192.168.5.5

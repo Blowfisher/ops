@@ -1,0 +1,27 @@
+- name: Put source file to remote host.
+  copy:
+    src:  zabbix.tar.gz
+    dest: /tmp/zabbix.tar.gz
+
+- name: Untag source file.
+  unarchive:
+    src: /tmp/zabbix.tar.gz
+    remote_src: yes
+    dest: /usr/local/zabbix
+
+- name: Configure file.
+  copy:
+    src: zabbix_agentd.conf.j2
+    dest: /usr/local/zabbix/conf/zabbix_agentd.conf
+
+- name: Service configure.
+  copy:
+    src: zabbix_agentd.service
+    dest: /usr/lib/systemd/system/zabbix_agentd.service
+
+- name: Zabbix_agentd start.
+  service:
+    name: zabbix_agentd
+    state: started
+    enabled: yes
+    

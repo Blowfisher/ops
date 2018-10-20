@@ -1,0 +1,19 @@
+- name:  Put Executed file to remote host.
+  win_copy:
+    src: zabbix
+    dest: c:\zabbix
+
+- name:  Put configure  file to remote host.
+  win_copy:
+    src: templates/test.j2
+    dest: c:\zabbix\zabbix_agentd.win.conf
+
+- name: Install zabbix agent on the host
+  win_command: powershell.exe
+  args:
+    stdin: c:\zabbix\zabbix.exe -c c:\zabbix\zabbix_agentd.win.conf -i
+    
+- name: Start zabbix agent on the host
+  win_command: powershell.exe
+  args:
+    stdin: c:\zabbix\zabbix.exe -c c:\zabbix\zabbix_agentd.win.conf -s
