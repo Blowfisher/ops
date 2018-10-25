@@ -37,6 +37,7 @@ roles目录结构:
 
 
 windows PC机配置
+ansible 端需要安装 pywinrm 参考网址：https://www.cnblogs.com/wuxie1989/p/8269564.html
 
 安装Framework 3.0+
 
