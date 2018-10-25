@@ -1,4 +1,0 @@
-HostMetadata: windows
-HostName: {{ host }}
-ServiceName: 192.168.5.6
-ActiveServiceName: 192.168.5.6
