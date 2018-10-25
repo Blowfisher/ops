@@ -1,11 +1,15 @@
-- name: Deploy zabbix for windows agent hosts.
-  hosts: win
-  remote_user: administrator
-  roles:
-    - win
-
 - name: Deploy zabbix for Centos agent hosts.
   hosts: centos
   remote_user: root
+  vars:
+  - btname: zabbix_agentd.tar.gz
+  - stname: zabbix_server.tar.gz
+  - ins_method: src 
+  - myflag: centos
+  - server: 192.168.5.11
+  - zbx_dir: /usr/local/zabbix
+  - ie_file: /usr/local/etc/zabbix_agentd
+  - se_file: etc/zabbix_agentd.conf
+  - be_file: conf/zabbix_agentd.conf
   roles:
     - centos

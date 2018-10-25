@@ -1,27 +1,100 @@
-- name: Put source file to remote host.
-  copy:
-    src:  zabbix.tar.gz
-    dest: /tmp/zabbix.tar.gz
+- name: ADD User for zabbix.
+  user:
+    name: zabbix
+    create_home: no
+    shell: /bin/bash
+    state: present
 
-- name: Untag source file.
+- name: Create tmp dir for src build.
+  file:
+    path: "{{ tmp_dir }}"
+    state: directory
+    mode: 0755
+  when:  ins_method == 'src' 
+
+- name: Create bin dir for runing.
+  file:
+    path: "{{ zbx_dir }}"
+    state: directory
+    mode: 0755
+  when: ins_method == 'bin'
+
+
+- name: Unarchive bin the remote file.
   unarchive:
-    src: /tmp/zabbix.tar.gz
-    remote_src: yes
-    dest: /usr/local/zabbix
+    copy: yes
+    src: "{{ bin_tar_name }}"
+    dest: "{{ zbx_dir }}"
+  when: ins_method == 'bin'
+    
 
-- name: Configure file.
-  copy:
+- name: Unarchive src the remote file.
+  unarchive:
+    copy: yes
+    src: "{{ src_tar_name }}"
+    dest: "{{ tmp_dir }}"
+  when: ins_method == 'src'
+
+
+- name: Put SRC  Install File to the remote host.
+  template:
+    src: zbx_build.sh.j2
+    dest: "{{ tmp_dir }}/zbx_build.sh"
+  when: ins_method =='src'
+ 
+- name: Build src on the remote host.
+  shell: bash "{{ tmp_dir }}"/zbx_build.sh
+  register: result
+  when: ins_method =='src'
+
+#- name: Print build info.
+#    fail: msg="{{ result.stdout }}"
+#    when: result.stdout|error
+
+- name: BINARY Put conf file by template to remote host.
+  template:
     src: zabbix_agentd.conf.j2
-    dest: /usr/local/zabbix/conf/zabbix_agentd.conf
+    dest: "{{ zbx_dir }}/{{ bin_etc_file }}"
+  when:  ins_method =='bin'
 
-- name: Service configure.
+- name: Put configure file to etc directory.
   copy:
-    src: zabbix_agentd.service
-    dest: /usr/lib/systemd/system/zabbix_agentd.service
+    src: "{{ zbx_dir }}/{{ bin_etc_file }}"
+    dest: "/usr/local/{{ src_etc_file }}"
+    remote_src: yes
+  when: (ansible_distribution_major_version=="6" and ins_method == "bin")
 
-- name: Zabbix_agentd start.
+- name:  SRC Put conf file by template to remote host.
+  template:
+    src: zabbix_agentd.conf.j2
+    dest: "{{ zbx_dir }}/{{ src_etc_file }}"
+  when:  ins_method =='src'
+
+- name: Put configure file to etc directory.
+  copy:
+    src: "{{ zbx_dir }}/{{ src_etc_file }}"
+    dest: "/usr/local/{{ src_etc_file }}"
+    remote_src: yes
+  when: (ansible_distribution_major_version=="6" and ins_method == "src")
+
+- name: Put  service file to remote host.
+  template: 
+    src: zabbix_agent.service.j2
+    dest: /usr/lib/systemd/system/zabbix_agentd.service
+  when: ansible_distribution_major_version=="7"
+
+- name: Put init file to remote host.
+  template: 
+    src: zabbix_agentd.j2
+    dest: /etc/init.d/zabbix_agentd
+  when: ansible_distribution_major_version=="6"
+
+
+- name: Start agent.
   service:
     name: zabbix_agentd
     state: started
     enabled: yes
-    
+
+#- name: Echo vars of Facts.
+#  shell: echo ""{{ ansible_date_time.date }}"">/tmp/info.txt && echo "{{ ansible_default_ipv4.address }}">>/tmp/info.txt
