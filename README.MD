@@ -6,34 +6,34 @@
 roles目录结构:
 
 ── roles 
-   ├── centos
-   │   ├── files   #存放agent源代码/二进制可执行程序
-   │   │   ├── zabbix_agent.tar.gz
-   │   │   └── zabbix_server.tar.gz
-   │   ├── tasks
-   │   │   └── main.yml
-   │   ├── templates  #存放agent配置文件
-   │   │   ├── zabbix_agentd.conf.j2
-   │   │   ├── zabbix_agentd.j2
-   │   │   ├── zabbix_agent.service.j2
-   │   │   └── zbx_build.sh.j2
-   │   └── vars
-   │       └── main.yml
-   ├── lauch  #定义预先执行的任务
-   │   ├── files
-   │   ├── tasks
-   │   │   └── main.yml
-   │   ├── templates
-   │   └── vars
-   └── win
-       ├── files
-       │   └── zabbix_agents_win.zip
-       ├── tasks
-       │   └── main.yml
-       ├── templates
-       │   └── zabbix_agentd.win.conf.j2
-       └── vars
-           └── main.yml
+   ├── centos
+   │   ├── files   #存放agent源代码/二进制可执行程序
+   │   │   ├── zabbix_agent.tar.gz
+   │   │   └── zabbix_server.tar.gz
+   │   ├── tasks
+   │   │   └── main.yml
+   │   ├── templates  #存放agent配置文件
+   │   │   ├── zabbix_agentd.conf.j2
+   │   │   ├── zabbix_agentd.j2
+   │   │   ├── zabbix_agent.service.j2
+   │   │   └── zbx_build.sh.j2
+   │   └── vars
+   │       └── main.yml
+   ├── lauch  #定义预先执行的任务
+   │   ├── files
+   │   ├── tasks
+   │   │   └── main.yml
+   │   ├── templates
+   │   └── vars
+   └── win
+       ├── files
+       │   └── zabbix_agents_win.zip
+       ├── tasks
+       │   └── main.yml
+       ├── templates
+       │   └── zabbix_agentd.win.conf.j2
+       └── vars
+           └── main.yml
 
 
 windows PC机配置
