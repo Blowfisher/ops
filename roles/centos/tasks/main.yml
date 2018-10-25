@@ -1,23 +1,23 @@
-- name: ADD User for zabbix.
-  user:
-    name: zabbix
-    create_home: no
-    shell: /bin/bash
-    state: present
+#- name: ADD User for zabbix.
+#  user:
+#    name: zabbix
+#    create_home: no
+#    shell: /bin/bash
+#    state: present
 
-- name: Create tmp dir for src build.
-  file:
-    path: "{{ tmp_dir }}"
-    state: directory
-    mode: 0755
-  when:  ins_method == 'src' 
+#- name: Create tmp dir for src build.
+#  file:
+#    path: "{{ tmp_dir }}"
+#    state: directory
+#    mode: 0755
+#  when:  ins_method == 'src' 
 
-- name: Create bin dir for runing.
-  file:
-    path: "{{ zbx_dir }}"
-    state: directory
-    mode: 0755
-  when: ins_method == 'bin'
+#- name: Create bin dir for runing.
+#  file:
+#    path: "{{ zbx_dir }}"
+#    state: directory
+#    mode: 0755
+#  when: ins_method == 'bin'
 
 
 - name: Unarchive bin the remote file.
@@ -25,6 +25,7 @@
     copy: yes
     src: "{{ bin_tar_name }}"
     dest: "{{ zbx_dir }}"
+    creates: "{{ zbx_dir }}"
   when: ins_method == 'bin'
     
 
@@ -33,6 +34,7 @@
     copy: yes
     src: "{{ src_tar_name }}"
     dest: "{{ tmp_dir }}"
+    creates: "{{ tmp_dir }}"
   when: ins_method == 'src'
 
 
