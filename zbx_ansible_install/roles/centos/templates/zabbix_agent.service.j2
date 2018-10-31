@@ -1,0 +1,22 @@
+[Unit]
+Description=Zabbix Agent daemon
+After=network.target
+
+
+[Service]
+Type=forking
+PIDFile=/tmp/zabbix_agentd.pid
+{%if ins_method == "bin"%}
+ExecStart={{ zbx_dir }}/sbin/zabbix_agentd -c {{ zbx_dir }}/{{ bin_etc_file }}
+{%endif%}
+{% if ins_method == "src"%}
+ExecStart={{ zbx_dir }}/sbin/zabbix_agentd -c {{ zbx_dir }}/{{ src_etc_file }}
+{%endif%}
+ExecReload=/bin/kill -HUP $MAINPID
+KillMode=process
+Restart=on-failure
+RestartSec=42s
+
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,11 @@
+#- name: Deploy zabbix for Centos agent hosts.
+#  hosts: centos
+#  remote_user: root
+#  roles:
+#    - centos
+
+- name: Deploy zabbix for Windows agent hosts.
+  hosts: windows
+  remote_user: administrator
+  roles:
+    - win

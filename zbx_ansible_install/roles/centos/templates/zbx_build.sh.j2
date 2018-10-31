@@ -1,0 +1,36 @@
+#!/bin/bash
+#
+set -e
+echo "--- --- --- --- -SART- --- --- --- ---"
+
+
+#yum clean all 
+#yum makecache 
+
+if [ -d {{ tmp_dir }} ];then
+   echo 
+else
+   mkdir -p {{ tmp_dir }} &>/dev/null
+fi
+
+yum -y install gcc gcc-c++ &&\
+cd {{ tmp_dir }} &&\
+for i in `dir`;do
+  if [ -d "/tmp/zabbix/$i" ];then
+    bdir="/tmp/zabbix/$i"
+  fi
+done
+
+cd $bdir
+./configure --prefix={{ zbx_dir }} --enable-agent && make && make install 
+
+if [ -e "{{ zbx_dir }}/sbin/zabbix_server" ];then
+  echo "====================================="
+  echo "||                                  ||"
+  echo -n "||"
+  echo  "      Installed Success...       ||"
+  echo "||                                  ||"
+  echo "====================================="
+fi
+
+rm -rf {{ tmp_dir }}
