@@ -1,0 +1,8 @@
+bin_tar_name: zabbix_agents_win.zip
+zbx_dir: c:\zabbix
+
+winflag: iis
+server: 192.168.5.6
+
+tar_exe_path: bin\win64\zabbix_agentd.exe
+tar_etc_path: conf\zabbix_agentd.win.conf
