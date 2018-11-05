@@ -1,0 +1,34 @@
+- name: Zabbix conf file rm 1 lines.
+  lineinfile:
+    path: /data/zabbix/etc/zabbix_agentd.conf
+    regexp: '^UserParameter(.*)$'
+    state: absent
+
+
+
+
+- name: Zabbix conf file add 1 lines.
+  lineinfile:
+    path: /data/zabbix/etc/zabbix_agentd.conf
+    line: "UserParameter=redis.info[*], bash /data/zabbix/etc/redis.sh $1"
+    state: present
+
+- name: Config zabbix user has privileges to run redis-cli.
+  lineinfile:
+    path: /etc/sudoers
+    line: "zabbix ALL=(ALL) NOPASSWD:/usr/local/redis-3.0.6/bin/redis-cli,/usr/bin/netstat"
+    state: present
+
+- name: Uplocad file to the host.
+  copy:
+    src: redis.sh
+    dest: /data/zabbix/etc/redis.sh
+    mode: '0755'
+
+- name: Change host for bash script.
+  shell: sed -i s/^HOST.*$/HOST="{{ansible_default_ipv4.address}}"/ /data/zabbix/etc/redis.sh
+
+- name: Restart zabbix agentd.
+  service:
+    name: zabbix_agent
+    state: restarted
