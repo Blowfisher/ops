@@ -1,23 +1,23 @@
-#- name: ADD User for zabbix.
-#  user:
-#    name: zabbix
-#    create_home: no
-#    shell: /bin/bash
-#    state: present
+- name: ADD User for zabbix.
+  user:
+    name: zabbix
+    create_home: no
+    shell: /bin/bash
+    state: present
 
-#- name: Create tmp dir for src build.
-#  file:
-#    path: "{{ tmp_dir }}"
-#    state: directory
-#    mode: 0755
-#  when:  ins_method == 'src' 
+- name: Create tmp dir for src build.
+  file:
+    path: "{{ tmp_dir }}"
+    state: directory
+    mode: 0755
+  when:  ins_method == 'src' 
 
-#- name: Create bin dir for runing.
-#  file:
-#    path: "{{ zbx_dir }}"
-#    state: directory
-#    mode: 0755
-#  when: ins_method == 'bin'
+- name: Create bin dir for runing.
+  file:
+    path: "{{ zbx_dir }}"
+    state: directory
+    mode: 0755
+  when: ins_method == 'bin'
 
 
 - name: Unarchive bin the remote file.
@@ -37,6 +37,10 @@
     creates: "{{ tmp_dir }}"
   when: ins_method == 'src'
 
+- name: Put file to remote host.
+  copy:
+    src: "{{ src_tar_name }}"
+    dest: /tmp
 
 - name: Put SRC  Install File to the remote host.
   template:
@@ -45,8 +49,8 @@
   when: ins_method =='src'
  
 - name: Build src on the remote host.
-  shell: bash "{{ tmp_dir }}"/zbx_build.sh
-  register: result
+  shell: bash "{{ tmp_dir }}/zbx_build.sh"
+#  register: result
   when: ins_method =='src'
 
 #- name: Print build info.

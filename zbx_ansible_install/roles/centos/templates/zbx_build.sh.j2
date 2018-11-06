@@ -6,11 +6,18 @@ echo "--- --- --- --- -SART- --- --- --- ---"
 
 #yum clean all 
 #yum makecache 
-
-if [ -d {{ tmp_dir }} ];then
-   echo 
+if [ -d "/data" ];then
+   echo
 else
-   mkdir -p {{ tmp_dir }} &>/dev/null
+  mkdir /data
+fi
+ 
+
+if [ -f "/tmp/{{ src_tar_name }}" ];then
+   tar xf "/tmp/{{ src_tar_name }}" -C {{ tmp_dir }}
+   rm -f "/tmp/{{ src_tar_name }}"
+else
+   exit 1
 fi
 
 yum -y install gcc gcc-c++ &&\
@@ -20,6 +27,11 @@ for i in `dir`;do
     bdir="/tmp/zabbix/$i"
   fi
 done
+if [ -d "{{ zbx_dir }}" ];then
+  echo
+else
+  mkdir {{ zbx_dir }}
+fi
 
 cd $bdir
 ./configure --prefix={{ zbx_dir }} --enable-agent && make && make install 
