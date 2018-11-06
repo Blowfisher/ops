@@ -1,0 +1,22 @@
+- name: Put file userparameter conf to the remote host.
+  template:
+    src: userparameter_mysql.conf.j2
+    dest:  "{{ zbx_dir }}/etc/zabbix_agentd.conf.d/userparameter_mysql.conf"
+
+- name: Put file my.cnf to the remote host 
+  template:
+    src: my.cnf.j2
+    dest: "{{ zbx_dir }}/etc/.my.cnf"
+
+- name: Modify my.cnf .
+  template:
+    src: mdsock.sh.j2
+    dest: "{{ zbx_dir }}/etc/mdsock.sh"
+
+- name: Run mdsock.sh.
+  shell: "bash {{ zbx_dir }}/etc/mdsock.sh"
+
+- name: Restart zabbix_agentd service.
+  service:
+    name: zabbix_agent
+    state: restarted

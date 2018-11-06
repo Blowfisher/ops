@@ -1,0 +1,9 @@
+#!/bin/bash
+#
+msock=`find / -name "mysql.sock"`
+
+for i in $msock;do
+  sed -i s/^socket=/var/lib/mysql.sock/socket=$i/ {{ zbx_dir }}/etc/.my.cnf
+  break
+done
+
